@@ -66,6 +66,9 @@ export interface OrderDetail {
   nama_pelanggan: string;
   nomor_wa: string;
   total_harga: number;
+  // Tambahkan dua properti opsional ini
+  jumlah_uang_tunai?: number; // Tanda tanya (?) berarti properti ini boleh ada atau tidak
+  kembalian?: number;
   status_pembayaran: "LUNAS" | "BELUM_BAYAR" | "KADALUARSA" | "DIBATALKAN";
   status_pesanan: "PESANAN_DITERIMA" | "DIPROSES" | "SIAP_DIKIRIM" | "DIKIRIM" | "SELESAI" | "DIBATALKAN";
   catatan_pelanggan: string | null;

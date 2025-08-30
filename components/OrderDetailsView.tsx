@@ -144,8 +144,32 @@ export default function OrderDetailsView({ id }: OrderDetailsViewProps) {
               ))}
             </TableBody>
           </Table>
-          <div className="text-right mt-4 font-bold text-lg">
-            Total: {formatCurrency(order.total_harga)}
+           <div className="mt-4 pt-4 border-t space-y-1 text-right text-sm">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>{formatCurrency(order.total_harga / 1.11)}</span>
+            </div>
+             <div className="flex justify-between">
+              <span>PPN (11%)</span>
+              <span>{formatCurrency(order.total_harga - (order.total_harga / 1.11))}</span>
+            </div>
+            <div className="flex justify-between font-bold text-base">
+              <span>Total</span>
+              <span>{formatCurrency(order.total_harga)}</span>
+            </div>
+            {/* Tampilkan jika ada data uang tunai */}
+            {order.jumlah_uang_tunai && order.jumlah_uang_tunai > 0 && (
+              <>
+                <div className="flex justify-between">
+                  <span>Uang Tunai</span>
+                  <span>{formatCurrency(order.jumlah_uang_tunai)}</span>
+                </div>
+                <div className="flex justify-between font-bold text-green-600">
+                  <span>Kembalian</span>
+                  <span>{formatCurrency(order.kembalian || 0)}</span>
+                </div>
+              </>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between flex-wrap gap-2">

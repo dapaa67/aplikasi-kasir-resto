@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
         source: '/api/konfirmasi-pembayaran/:id',
         destination: 'https://ayamgorengsuharti.vercel.app/api/konfirmasi-pembayaran/:id',
       },
+       {
+        source: '/api/menu/:id',
+        destination: 'https://ayamgorengsuharti.vercel.app/api/menu/:id',
+      },
     ]
   },
 

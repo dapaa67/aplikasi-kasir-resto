@@ -91,16 +91,41 @@ export default function CetakStrukPage() {
         </div>
       ))}
 
-      <hr className="my-2 border-dashed border-black"/>
+  <hr className="my-2 border-dashed border-black"/>
       
-      <div className="flex justify-between font-bold">
-        <span>TOTAL</span>
-        <span>Rp {formatCurrency(order.total_harga)}</span>
+      {/* --- BAGIAN BARU UNTUK RINCIAN PEMBAYARAN DI STRUK --- */}
+      <div className="space-y-1">
+        <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>Rp {formatCurrency(order.total_harga / 1.11)}</span>
+        </div>
+        <div className="flex justify-between">
+            <span>PPN (11%)</span>
+            <span>Rp {formatCurrency(order.total_harga - (order.total_harga / 1.11))}</span>
+        </div>
+        <div className="flex justify-between font-bold">
+          <span>TOTAL</span>
+          <span>Rp {formatCurrency(order.total_harga)}</span>
+        </div>
+        {/* Tampilkan jika ada data uang tunai */}
+        {order.jumlah_uang_tunai && order.jumlah_uang_tunai > 0 && (
+            <>
+                <div className="flex justify-between">
+                    <span>TUNAI</span>
+                    <span>Rp {formatCurrency(order.jumlah_uang_tunai)}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span>KEMBALI</span>
+                    <span>Rp {formatCurrency(order.kembalian || 0)}</span>
+                </div>
+            </>
+        )}
       </div>
-      
-      <hr className="my-2 border-dashed border-black"/>
+      {/* --- AKHIR BAGIAN BARU --- */}
 
+      <hr className="my-2 border-dashed border-black"/>
       <p className="text-center mt-2">--- Terima Kasih ---</p>
     </div>
   );
 }
+      

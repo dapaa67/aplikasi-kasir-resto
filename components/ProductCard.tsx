@@ -3,7 +3,7 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
-import Link from "next/link"; // <-- 1. Import Link
+import Link from "next/link";
 import Image from "next/image";
 
 interface ProductCardProps {
@@ -12,23 +12,20 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  
-  // Fungsi ini untuk mencegah link aktif saat tombol 'Tambah' diklik
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // Mencegah navigasi Link
+    e.preventDefault();
     onAddToCart(product);
   }
 
   return (
-    // 2. Bungkus semua dengan <Link>
     <Link href={`/menu/${product.id}`} className="flex">
-      <Card className="flex flex-col w-full hover:shadow-lg transition-shadow">
+      <Card className="flex flex-col w-full hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer">
         <Image 
-        src={product.gambar_url} 
-        alt={product.nama_produk} 
-        width={150} 
-        height={150} 
-        className="rounded-t-md object-cover h-32 w-full" 
+          src={product.gambar_url} 
+          alt={product.nama_produk} 
+          width={200} 
+          height={200} 
+          className="rounded-t-md object-cover h-32 w-full" 
         />
         
         <CardContent className="flex-grow p-4">
@@ -38,8 +35,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
           </p>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
-          {/* 3. Update tombol dengan event handler baru */}
+        <CardFooter className="p-4 pt-0 mt-auto">
           <Button className="w-full" onClick={handleButtonClick}>
             Tambah
           </Button>

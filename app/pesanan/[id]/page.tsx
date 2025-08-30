@@ -2,6 +2,8 @@
 
 import OrderDetailsView from "@/components/OrderDetailsView";
 
+export const dynamic = 'force-dynamic';
+
 export default function OrderDetailPage({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">

@@ -1,43 +1,61 @@
 // app/menu/[id]/page.tsx
 
+"use client";
+
+import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation"; // <-- 1. Import hook
 
-// Fungsi untuk mengambil data satu produk dari API
-async function getProductDetail(id: string): Promise<Product | null> {
-  try {
-    const response = await fetch(`https://ayamgorengsuharti.vercel.app/api/menu/${id}`, {
-      // Menambahkan revalidate untuk memastikan data tidak terlalu lama di-cache
-      next: { revalidate: 60 } // Revalidate setiap 60 detik
-    });
-    if (!response.ok) {
-      return null; // Produk tidak ditemukan atau error lainnya
+// Halaman ini sekarang harus jadi Client Component untuk menggunakan hook
+export default function ProductDetailPage() { // <-- 2. Hapus props `{ params }`
+  const params = useParams(); // <-- 3. Gunakan hook
+  const id = params.id as string; // Ambil 'id' dari params
+
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      const getProductDetail = async () => {
+        try {
+          setLoading(true);
+          // Gunakan proxy yang baru kita buat
+          const response = await fetch(`/api/menu/${id}`);
+          if (!response.ok) { 
+            setProduct(null); 
+            return; 
+          }
+          const data = await response.json();
+          setProduct(data);
+        } catch (error) {
+          console.error("Gagal fetch detail produk:", error);
+          setProduct(null);
+        } finally {
+            setLoading(false);
+        }
+      };
+      getProductDetail();
     }
-    return response.json();
-  } catch (error) {
-    console.error("Gagal fetch detail produk:", error);
-    return null;
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center p-8">Loading produk...</div>;
   }
-}
-
-// Ini adalah halaman kita, dia menerima `params` dari URL
-export default async function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = await getProductDetail(params.id);
-
-  // Jika produk tidak ditemukan, tampilkan pesan
+  
   if (!product) {
     return (
-      <div className="container mx-auto p-4 text-center">
-        <h1 className="text-2xl font-bold">Produk tidak ditemukan</h1>
-        <Link href="/">
-          <Button variant="link" className="mt-4">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Kembali ke Menu
-          </Button>
-        </Link>
-      </div>
+        <div className="text-center p-8">
+            <p className="text-xl font-semibold">Produk tidak ditemukan.</p>
+            <Button asChild variant="link" className="mt-4">
+                <Link href="/">Kembali ke Menu</Link>
+            </Button>
+        </div>
     );
   }
   
@@ -51,7 +69,6 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
           <ArrowLeft className="mr-2 h-4 w-4" /> Kembali ke Menu
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Kolom Gambar */}
         <div>
           <Image
             src={product.gambar_url} 
@@ -59,10 +76,10 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
             width={500}
             height={500}
             className="w-full h-auto object-cover rounded-lg shadow-lg"
+            priority // Tambahkan priority untuk LCP
             />
         </div>
 
-        {/* Kolom Detail & Aksi */}
         <div className="flex flex-col">
           <h1 className="text-4xl font-bold text-slate-800">{product.nama_produk}</h1>
           <p className="text-2xl font-semibold text-blue-600 my-2">{formatCurrency(product.harga)}</p>
@@ -71,7 +88,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
           </p>
 
           <div className="mt-auto pt-6">
-            <Button size="lg" className="w-full">
+            <Button size="lg" className="w-full" onClick={() => addToCart(product)}>
               Tambah ke Keranjang
             </Button>
           </div>
