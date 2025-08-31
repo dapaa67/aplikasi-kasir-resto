@@ -8,31 +8,31 @@ const nextConfig: NextConfig = {
       // ... aturan rewrite yang sudah ada
       {
         source: '/api/menu',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/menu',
+        destination: 'https://www.ayamgorengsuharti.com/api/menu',
       },
       {
         source: '/api/kategori',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/kategori',
+        destination: 'https://www.ayamgorengsuharti.com/api/kategori',
       },
       {
         source: '/api/orders',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/orders',
+        destination: 'https://www.ayamgorengsuharti.com/api/orders',
       },
       {
         source: '/api/metode-pembayaran',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/metode-pembayaran',
+        destination: 'https://www.ayamgorengsuharti.com/api/metode-pembayaran',
       },
       {
         source: '/api/orders/:id',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/orders/:id',
+        destination: 'https://www.ayamgorengsuharti.com/api/orders/:id',
       },
       {
         source: '/api/konfirmasi-pembayaran/:id',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/konfirmasi-pembayaran/:id',
+        destination: 'https://www.ayamgorengsuharti.com/api/konfirmasi-pembayaran/:id',
       },
        {
         source: '/api/menu/:id',
-        destination: 'https://ayamgorengsuharti.vercel.app/api/menu/:id',
+        destination: 'https://www.ayamgorengsuharti.com/api/menu/:id',
       },
     ]
   },

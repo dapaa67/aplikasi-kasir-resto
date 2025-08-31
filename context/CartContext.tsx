@@ -5,7 +5,6 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
 import { Product, CartItem } from '@/types';
 
-// 1. Definisikan "kamus" untuk data dan fungsi di dalam context
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
@@ -14,10 +13,8 @@ interface CartContextType {
   getCartTotal: () => number;
 }
 
-// 2. Buat Context-nya
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// 3. Buat Provider (Komponen yang akan "menyediakan" state)
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -50,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   
   const getCartTotal = () => {
     const subtotal = cart.reduce((acc, item) => acc + item.harga * item.quantity, 0);
-    return subtotal * 1.11; // Subtotal + PPN 11%
+    return subtotal * 1.11; // Termasuk PPN 11%
   };
 
   return (
@@ -60,7 +57,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// 4. Buat Custom Hook (cara gampang untuk memakai context)
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {

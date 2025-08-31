@@ -4,14 +4,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Image from "next/image"; // <-- 1. Import Image
 import { BookMarked, Receipt } from "lucide-react";
-import { CartProvider } from "@/context/CartContext"; // <-- 1. Import Provider
+import { CartProvider } from "@/context/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aplikasi Kasir Resto",
-  description: "Aplikasi kasir sederhana dengan Next.js",
+  title: "Resto Kasir", // <-- 2. Ganti judul metadata
+  description: "Aplikasi kasir untuk restoran",
 };
 
 export default function RootLayout({
@@ -22,14 +23,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* 2. Bungkus semua dengan CartProvider */}
         <CartProvider>
           <div className="flex flex-col min-h-screen bg-slate-100">
             <header className="bg-white shadow-sm sticky top-0 z-10 border-b border-slate-200">
               <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-                <Link href="/" className="text-xl font-bold text-slate-800">
-                  Resto Kasir Bro
+                
+                {/* --- PERUBAHAN UTAMA DI SINI --- */}
+                <Link href="/" className="flex items-center gap-3">
+                  <Image 
+                    src="/favicon.png" // <-- 3. Panggil logo dari folder public
+                    alt="Resto Kasir Logo" 
+                    width={32} 
+                    height={32} 
+                  />
+                  <span className="text-xl font-bold text-slate-800">
+                    Kasir Ayam Goreng Suharti {/* <-- 4. Ganti teks judul */}
+                  </span>
                 </Link>
+                {/* --- AKHIR PERUBAHAN --- */}
+
                 <div className="flex items-center gap-6">
                   <Link href="/" className="flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
                     <Receipt className="mr-2 h-4 w-4" />

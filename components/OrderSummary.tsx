@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { getAbbreviatedName } from "@/lib/utils"; // <-- 1. IMPORT FUNGSI BARU
+
 
 // Data yang akan dikirim ke parent component saat checkout
 export interface OrderFormData {
@@ -102,7 +104,7 @@ export default function OrderSummary({ cart, paymentMethods, onUpdateQuantity, o
             <TableBody>
               {cart.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.nama_produk}</TableCell>
+                  <TableCell className="font-medium break-words">{getAbbreviatedName(item)}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</Button>
@@ -128,7 +130,7 @@ export default function OrderSummary({ cart, paymentMethods, onUpdateQuantity, o
             <div><Label htmlFor="customerName">Nama Pelanggan (Opsional)</Label><Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
             <div><Label htmlFor="notes">Catatan (Opsional)</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} /></div>
             <div>
-                <Label>Metode Pembayaran</Label>
+                <Label>Pembayaran</Label>
                 <RadioGroup value={String(paymentMethodId)} onValueChange={(value) => setPaymentMethodId(Number(value))} className="mt-2">
                   {activePaymentMethods.map(method => (<div key={method.id} className="flex items-center space-x-2"><RadioGroupItem value={String(method.id)} id={`pm-${method.id}`} /><Label htmlFor={`pm-${method.id}`}>{method.nama_metode}</Label></div>))}
                 </RadioGroup>
@@ -159,7 +161,13 @@ export default function OrderSummary({ cart, paymentMethods, onUpdateQuantity, o
           )}
           {/* --- AKHIR TAMPILAN KEMBALIAN --- */}
 
-          <Button className="w-full mt-4" size="lg" onClick={handleSubmit}>Buat Pesanan</Button>
+          <Button 
+            className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white" 
+            size="lg" 
+            onClick={handleSubmit}
+          >
+            Buat Pesanan
+          </Button>
         </CardFooter>
       )}
     </Card>

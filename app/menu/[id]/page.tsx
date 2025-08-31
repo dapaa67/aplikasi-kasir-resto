@@ -87,9 +87,13 @@ export default function ProductDetailPage() { // <-- 2. Hapus props `{ params }`
             {product.deskripsi}
           </p>
 
-          <div className="mt-auto pt-6">
-            <Button size="lg" className="w-full" onClick={() => addToCart(product)}>
-              Tambah ke Keranjang
+          <div className="mt-auto pt-8">
+            <Button 
+                size="lg" 
+                className="w-full h-12 text-base bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center gap-2 rounded-lg" 
+                onClick={() => addToCart(product)}
+            >
+              <span>Tambah ke Keranjang</span>
             </Button>
           </div>
         </div>

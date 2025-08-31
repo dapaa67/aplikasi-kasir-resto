@@ -89,15 +89,30 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <div className="container mx-auto p-4">
-        <h1 className="text-4xl font-bold text-slate-800 mb-6">Resto Kasir Bro</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="mb-6 flex flex-wrap gap-2">
-              <Button variant={selectedCategory === null ? 'default' : 'outline'} onClick={() => setSelectedCategory(null)}>Semua</Button>
-              {categories.map((category) => (<Button key={category.id} variant={selectedCategory === category.id ? 'default' : 'outline'} onClick={() => setSelectedCategory(category.id)}>{category.nama_kategori}</Button>))}
-            </div>
-            <h2 className="text-2xl font-semibold text-slate-700 mb-4">Menu</h2>
-            {isLoading ? <p>Lagi ngambil menu, bro...</p> : (<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">{filteredProducts.map((product) => (<ProductCard key={product.id} product={product} onAddToCart={addToCart}/>))}</div>)}
+            <Button
+              variant={selectedCategory === null ? 'default' : 'outline'}
+              // Tambahkan className kondisional untuk menimpa warna default
+              className={selectedCategory === null ? 'bg-orange-500 hover:bg-orange-600 text-white border-transparent' : ''}
+              onClick={() => setSelectedCategory(null)}
+            >
+              Semua
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.id ? 'default' : 'outline'}
+                // Tambahkan className kondisional di sini juga
+                className={selectedCategory === category.id ? 'bg-orange-500 hover:bg-orange-600 text-white border-transparent' : ''}
+                onClick={() => setSelectedCategory(category.id)}
+              >
+                {category.nama_kategori}
+              </Button>
+            ))}
+          </div>
+            {isLoading ? <p>Lagi ngambil menu, bro...</p> : (<div className="grid grid-cols-2 md:grid-cols-3 gap-4">{filteredProducts.map((product) => (<ProductCard key={product.id} product={product} onAddToCart={addToCart}/>))}</div>)}
           </div>
           <div>
              <OrderSummary 
