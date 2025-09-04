@@ -115,12 +115,14 @@ export default function HomePage() {
             {isLoading ? <p>Lagi ngambil menu, bro...</p> : (<div className="grid grid-cols-2 md:grid-cols-3 gap-4">{filteredProducts.map((product) => (<ProductCard key={product.id} product={product} onAddToCart={addToCart}/>))}</div>)}
           </div>
           <div>
+            <div className="sticky top-24">
              <OrderSummary 
                cart={cart} // <-- Kirim cart dari context
                paymentMethods={paymentMethods}
                onUpdateQuantity={updateQuantity} // <-- Kirim updateQuantity dari context
                onSubmitOrder={handleCreateOrder}
              />
+             </div>
           </div>
         </div>
       </div>

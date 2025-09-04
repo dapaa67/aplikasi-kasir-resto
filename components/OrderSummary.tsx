@@ -85,91 +85,90 @@ export default function OrderSummary({ cart, paymentMethods, onUpdateQuantity, o
   const formatCurrency = (amount: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 
   return (
-    <Card>
+     <Card className="h-full flex flex-col max-h-[calc(100vh-120px)]">
       <CardHeader>
         <CardTitle>Pesanan</CardTitle>
       </CardHeader>
-      <CardContent>
+       <CardContent className="flex-1 overflow-y-auto space-y-4">
         {cart.length === 0 ? (
-          <p className="text-slate-500 text-center">Keranjang masih kosong</p>
+          <div className="flex h-full items-center justify-center">
+            <p className="text-slate-500 text-center">Keranjang masih kosong</p>
+          </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Item</TableHead>
-                <TableHead className="text-center">Jml</TableHead>
-                <TableHead className="text-right">Harga</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {cart.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium break-words">{getAbbreviatedName(item)}</TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center space-x-2">
-                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</Button>
-                      <span>{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</Button>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">{formatCurrency(item.harga * item.quantity)}</TableCell>
+          // Div ini menampung semua konten yang bisa di-scroll
+          <div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Item</TableHead>
+                  <TableHead className="w-[100px] text-center">Qty</TableHead>
+                  <TableHead className="w-[120px] text-right">Harga</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {cart.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium break-words">{getAbbreviatedName(item)}</TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</Button>
+                        <span>{item.quantity}</span>
+                        <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</Button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.harga * item.quantity)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            
+            {/* Subtotal dan PPN sekarang dipindah ke dalam CardContent */}
+            <div className="mt-4 pt-4 border-t space-y-4">
+              <div className="w-full flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatCurrency(subtotal)}</span></div>
+              <div className="w-full flex justify-between"><span>PPN (11%)</span><span className="font-semibold">{formatCurrency(tax)}</span></div>
+              <hr className="w-full" />
+              <div className="w-full space-y-3">
+                <div><Label htmlFor="customerName">Nama Pelanggan (Opsional)</Label><Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
+                <div><Label htmlFor="notes">Catatan (Opsional)</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} /></div>
+                <div>
+                    <Label>Metode Pembayaran</Label>
+                    <RadioGroup value={String(paymentMethodId)} onValueChange={(value) => setPaymentMethodId(Number(value))} className="mt-2">
+                      {activePaymentMethods.map(method => (<div key={method.id} className="flex items-center space-x-2"><RadioGroupItem value={String(method.id)} id={`pm-${method.id}`} /><Label htmlFor={`pm-${method.id}`}>{method.nama_metode}</Label></div>))}
+                    </RadioGroup>
+                </div>
+                {selectedPaymentMethod?.nama_metode.toLowerCase().includes('cash') && (
+                  <div className="animate-in fade-in-20">
+                    <Label htmlFor="cashAmount">Jumlah Uang Diterima</Label>
+                    <Input id="cashAmount" type="number" value={cashAmount || ''} onChange={(e) => setCashAmount(Number(e.target.value))} placeholder="e.g. 100000" />
+                  </div>
+                )}
+              </div>
+              <div className="w-full flex justify-between text-xl font-bold pt-2">
+                <span>Total</span>
+                <span>{formatCurrency(total)}</span>
+              </div>
+              {kembalian > 0 && (
+                <div className="w-full flex justify-between text-lg font-semibold text-green-600 animate-in fade-in-20">
+                  <span>Kembalian</span>
+                  <span>{formatCurrency(kembalian)}</span>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </CardContent>
       
-      {/* Footer sekarang berisi kalkulasi DAN form checkout */}
-      {cart.length > 0 && (
-        <CardFooter className="flex flex-col space-y-4 pt-4">
-          <div className="w-full flex justify-between"><span>Subtotal</span><span className="font-semibold">{formatCurrency(subtotal)}</span></div>
-          <div className="w-full flex justify-between"><span>PPN (11%)</span><span className="font-semibold">{formatCurrency(tax)}</span></div>
-          <hr className="w-full my-2" />
-          <div className="w-full space-y-3">
-            <div><Label htmlFor="customerName">Nama Pelanggan (Opsional)</Label><Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
-            <div><Label htmlFor="notes">Catatan (Opsional)</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} /></div>
-            <div>
-                <Label>Pembayaran</Label>
-                <RadioGroup value={String(paymentMethodId)} onValueChange={(value) => setPaymentMethodId(Number(value))} className="mt-2">
-                  {activePaymentMethods.map(method => (<div key={method.id} className="flex items-center space-x-2"><RadioGroupItem value={String(method.id)} id={`pm-${method.id}`} /><Label htmlFor={`pm-${method.id}`}>{method.nama_metode}</Label></div>))}
-                </RadioGroup>
-            </div>
-
-            {/* --- INPUT UANG TUNAI KONDISIONAL --- */}
-            {selectedPaymentMethod?.nama_metode.toLowerCase().includes('cash') && (
-              <div className="animate-in fade-in-20">
-                <Label htmlFor="cashAmount">Jumlah Uang Diterima</Label>
-                <Input id="cashAmount" type="number" value={cashAmount || ''} onChange={(e) => setCashAmount(Number(e.target.value))} placeholder="e.g. 100000" />
-              </div>
-            )}
-            {/* --- AKHIR INPUT UANG TUNAI --- */}
-
-          </div>
-          
-          <div className="w-full flex justify-between text-xl font-bold pt-4">
-            <span>Total</span>
-            <span>{formatCurrency(total)}</span>
-          </div>
-
-          {/* --- TAMPILAN KEMBALIAN KONDISIONAL --- */}
-          {kembalian > 0 && (
-            <div className="w-full flex justify-between text-lg font-semibold text-green-600 animate-in fade-in-20">
-              <span>Kembalian</span>
-              <span>{formatCurrency(kembalian)}</span>
-            </div>
-          )}
-          {/* --- AKHIR TAMPILAN KEMBALIAN --- */}
-
-          <Button 
-            className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white" 
-            size="lg" 
-            onClick={handleSubmit}
-          >
-            Buat Pesanan
-          </Button>
-        </CardFooter>
-      )}
+      {/* Footer sekarang HANYA berisi tombol submit */}
+      <CardFooter className="pt-4 border-t">
+        <Button 
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white" 
+          size="lg" 
+          onClick={handleSubmit}
+          disabled={cart.length === 0} // Tombol disable jika keranjang kosong
+        >
+          Buat Pesanan
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
